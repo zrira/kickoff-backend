@@ -15,6 +15,8 @@ class UpdateProfileRequest extends FormRequest
     {
         return [
             'name' => ['sometimes', 'string', 'max:255'],
+            'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users,email,' . $this->user()->id],
+            'password' => ['sometimes', 'confirmed', 'min:8'],
             'avatar' => ['sometimes', 'nullable', 'string', 'max:500'],
             'city_id' => ['sometimes', 'nullable', 'integer', 'exists:cities,id'],
         ];

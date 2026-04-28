@@ -81,7 +81,13 @@ class ProfileController extends Controller
     public function update(UpdateProfileRequest $request): JsonResponse
     {
         $user = $request->user();
-        $user->update($request->validated());
+        $data = $request->validated();
+        
+        if ($request->has('password')) {
+            $data['password'] = \Illuminate\Support\Facades\Hash::make($request->password);
+        }
+        
+        $user->update($data);
         $user->load(['city', 'playerProfiles.sport']);
 
         return response()->json([
