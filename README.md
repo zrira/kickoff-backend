@@ -46,6 +46,6 @@ Manages the complete lifecycle of a sports match:
 3. Configure environment: `cp .env.example .env`
 4. Generate application key: `php artisan key:generate`
 5. Run migrations and seed the database: `php artisan migrate --seed`
-6. Start the development server: `php artisan serve`
+6. Start the development server (Required for mobile connectivity): `php artisan serve --host=0.0.0.0`
 
 The default seeder creates a superadmin account (`superadmin@kickoff.com` / `secret`) and 100 players with generated match histories for testing.
