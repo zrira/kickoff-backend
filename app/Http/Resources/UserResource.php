@@ -19,6 +19,8 @@ class UserResource extends JsonResource
                 'city_id' => $this->city_id,
                 'role' => $this->role,
                 'elo_points' => $this->playerProfiles->first()?->elo_points ?? null,
+                'total_wins' => $this->playerProfiles->first()?->total_wins ?? 0,
+                'total_matches' => $this->playerProfiles->first()?->total_matches ?? 0,
                 'rank' => $this->role === 'player' ? (\App\Models\PlayerProfile::where('sport_id', 1)->where('elo_points', '>', $this->playerProfiles->first()?->elo_points ?? 0)->count() + 1) : null,
                 'created_at' => $this->created_at?->toISOString(),
             ],
