@@ -27,6 +27,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/login', [AuthController::class, 'login']);
     });
 
+    Route::get('/cities', [CityController::class, 'index']);
+
     // --- Auth (protected) ---
     Route::middleware('auth:sanctum')->group(function () {
 
@@ -62,9 +64,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/profile/{user}/history', [ProfileController::class, 'history']);
         Route::get('/profile/{user}/elo-history', [ProfileController::class, 'eloHistory']);
         Route::put('/profile/update', [ProfileController::class, 'update']);
-
-        // Cities
-        Route::get('/cities', [CityController::class, 'index']);
 
         // --- Admin Backoffice ---
         Route::prefix('admin')->group(function () {

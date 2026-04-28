@@ -13,7 +13,7 @@ class LeaderboardResource extends JsonResource
             'type' => 'leaderboard_entries',
             'id' => (string) $this->id,
             'attributes' => [
-                'rank' => $this->rank,
+                'rank' => $this->rank ?? null, // Will be overridden by index in frontend mostly
                 'elo_points' => $this->elo_points,
                 'total_matches' => $this->total_matches,
                 'total_wins' => $this->total_wins,

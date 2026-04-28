@@ -23,6 +23,12 @@ class MatchResource extends JsonResource
                     'score_a' => $this->scores()->where('status', 'approved')->first()->score_a,
                     'score_b' => $this->scores()->where('status', 'approved')->first()->score_b,
                 ] : null : null,
+                'pending_score' => $this->status === 'scoring' ? $this->scores()->where('status', 'pending')->latest('id')->first() ? [
+                    'id' => $this->scores()->where('status', 'pending')->latest('id')->first()->id,
+                    'score_a' => $this->scores()->where('status', 'pending')->latest('id')->first()->score_a,
+                    'score_b' => $this->scores()->where('status', 'pending')->latest('id')->first()->score_b,
+                    'submitted_by' => $this->scores()->where('status', 'pending')->latest('id')->first()->submitted_by,
+                ] : null : null,
                 'max_players' => $this->max_players,
                 'created_at' => $this->created_at?->toISOString(),
             ],
