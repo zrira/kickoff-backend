@@ -1,58 +1,51 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Kickoff API Backend
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is the core API service for the Kickoff sports matchmaking platform, built with Laravel. It handles player statistics, venue management, real-time match lifecycle events, and competitive rating (ELO) calculations.
 
-## About Laravel
+## Technology Stack
+- **Framework**: Laravel 11
+- **Language**: PHP 8.3+
+- **Database**: SQLite (Local development) / PostgreSQL (Production)
+- **Real-time**: Laravel Reverb / Pusher
+- **Observability**: Laravel Telescope
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Architecture Overview
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The backend follows a service-oriented approach within the Laravel framework to separate business logic from the HTTP layer.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Core Components
 
-## Learning Laravel
+- **Models (app/Models)**: Implements the data schema and Eloquent relationships. Key models include Game (Matches), User, Venue, and PlayerProfile.
+- **Services (app/Services)**: Contains the core business logic.
+    - **EloService**: Responsible for calculating rating changes based on match results and updating historical records.
+    - **MatchmakingService**: Manages the automated formation of matches and team balancing logic.
+- **Controllers (app/Http/Controllers/Api/V1)**: Handles API requests. Split between Admin controllers for the backoffice and Public controllers for the mobile application.
+- **Resources (app/Http/Resources)**: Transforms Eloquent models into structured JSON responses, ensuring consistent API contracts.
+- **Jobs (app/Jobs)**: Handles background tasks such as lobby expiration checks and asynchronous Elo updates.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Key Features
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Competitive Ranking System
+The backend implements a sophisticated ELO-based ranking system. Every match result triggers an automated recalculation of player ratings, which are persisted in a historical log to track player progression over time.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### Venue Management
+Provides comprehensive tools for managing sports venues, including status toggling (Active/Inactive) and occupancy tracking through daily/weekly schedule endpoints.
 
-## Agentic Development
+### Match Lifecycle
+Manages the complete lifecycle of a sports match:
+1. Waiting: Match created, looking for players.
+2. Lobby: Minimum player count reached, teams being formed.
+3. Active: Match is currently being played.
+4. Scoring: Match finished, awaiting score submission.
+5. Completed: Results approved and rankings updated.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Setup Instructions
 
-```bash
-composer require laravel/boost --dev
+1. Clone the repository and navigate to the directory.
+2. Install dependencies: `composer install`
+3. Configure environment: `cp .env.example .env`
+4. Generate application key: `php artisan key:generate`
+5. Run migrations and seed the database: `php artisan migrate --seed`
+6. Start the development server: `php artisan serve`
 
-php artisan boost:install
-```
-
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The default seeder creates a superadmin account (`superadmin@kickoff.com` / `secret`) and 100 players with generated match histories for testing.
